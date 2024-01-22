@@ -1,10 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import './IpInfoDisplay.css'; // Create a CSS file for styling
 
 const IpInfoDisplay = () => {
   const [ipInfo, setIpInfo] = useState(null);
+  const [showDetails, setShowDetails] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,30 +28,50 @@ const IpInfoDisplay = () => {
     fetchIpInfo();
   }, [navigate]);
 
+  const toggleDetails = () => {
+    setShowDetails(!showDetails);
+  };
+
   if (!ipInfo) {
     return <p>Loading...</p>;
   }
 
   return (
-    <div>
-      <h2>IP Information</h2>
-      <p>Client IP: {ipInfo.query}</p>
-      <p>Status: {ipInfo.status}</p>
-      <p>Country: {ipInfo.country}</p>
-      <p>Country Code: {ipInfo.countryCode}</p>
-      <p>Region: {ipInfo.region}</p>
-      <p>Region Name: {ipInfo.regionName}</p>
-      <p>City: {ipInfo.city}</p>
-      <p>ZIP: {ipInfo.zip}</p>
-      <p>Latitude: {ipInfo.lat}</p>
-      <p>Longitude: {ipInfo.lon}</p>
-      <p>Timezone: {ipInfo.timezone}</p>
-      <p>ISP: {ipInfo.isp}</p>
-      <p>Organization: {ipInfo.org}</p>
-      <p>AS: {ipInfo.as}</p>
+    <div className="ip-info-container">
+      <h2 className="ip-info-title">IP Information</h2>
+      <div className="ip-info-content">
+        <MapContainer
+          center={[ipInfo.lat, ipInfo.lon]}
+          zoom={10}
+          style={{ width: '100%', height: '200px' }}
+        >
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <Marker position={[ipInfo.lat, ipInfo.lon]}>
+            <Popup>{ipInfo.city}</Popup>
+          </Marker>
+        </MapContainer>
+        <div className="ip-info-details">
+          <p>
+            Client IP: {ipInfo.query}{' '}
+            <button className="more-info-button" onClick={toggleDetails}>
+              More Info
+            </button>
+          </p>
+          {showDetails && (
+            <div className="details-container">
+              <p>Country: {ipInfo.country}</p>
+              <p>Country Code: {ipInfo.countryCode}</p>
+              <p>Region: {ipInfo.region}</p>
+              <p>Region Name: {ipInfo.regionName}</p>
+              <p>City: {ipInfo.city}</p>
+              <p>Timezone: {ipInfo.timezone}</p>
+              {/* Add more details as needed */}
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
 
 export default IpInfoDisplay;
-

@@ -1,0 +1,23 @@
+/* IpInfoDisplay.css */
+
+.ip-info-container {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 20px;
+  }
+  
+  .ip-info-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .ip-info-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .ip-info-details {
+    margin-top: 10px;
+  }
+  
