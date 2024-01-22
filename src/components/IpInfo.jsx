@@ -60,6 +60,7 @@ const IpInfoDisplay = () => {
           {showDetails && (
             <div className="details-container">
               <p>Country: {ipInfo.country}</p>
+              <p>Device: {ipInfo.device}</p>
               <p>Country Code: {ipInfo.countryCode}</p>
               <p>Region: {ipInfo.region}</p>
               <p>Region Name: {ipInfo.regionName}</p>
