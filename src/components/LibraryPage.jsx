@@ -35,6 +35,8 @@ function Library() {
   const sliderRef = useRef(null);
   const [selectedDetail, setSelectedDetail] = useState(null);
   const [openDetailsModal, setOpenDetailsModal] = useState(false);
+  const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [deletingShortcut, setDeletingShortcut] = useState(null);
 
   const handleMoreInfo = async (shortCode) => {
     if (shortCode === expandedShortCode) {
@@ -50,6 +52,28 @@ function Library() {
   const handleDetailsModalClose = () => {
     setOpenDetailsModal(false);
   };
+  const handleDeleteClick = (shortCode) => {
+    setDeletingShortcut(shortCode);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const handleDeleteConfirmation = async (confirmed) => {
+    setDeleteConfirmationOpen(false);
+
+    if (confirmed && deletingShortcut) {
+      try {
+        await axios.delete(
+          `https://turbobackend.onrender.com/api/v1/turbo/getAllDetails/${deletingShortcut}`
+        );
+        await fetchAllDetails();
+      } catch (error) {
+        console.error('Error deleting shortcut:', error);
+      } finally {
+        setDeletingShortcut(null);
+      }
+    }
+  };
+
 
   const fetchAllDetails = async () => {
     try {
@@ -131,7 +155,15 @@ function Library() {
                     onClick={() => handleMoreInfo(detail.link)}
                   >
                     More Info
-                  </Button>
+                    
+                    </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => handleDeleteClick(detail.link)}
+              >
+                Delete
+              </Button>
                 </Typography>
               </div>
             ))}
@@ -163,7 +195,23 @@ function Library() {
               <Button onClick={handleDetailsModalClose}>Close</Button>
             </DialogActions>
           </Dialog>
-
+          <Dialog
+        open={deleteConfirmationOpen}
+        onClose={() => handleDeleteConfirmation(false)}
+      >
+        <DialogTitle>Confirmation</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete this details?
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => handleDeleteConfirmation(false)}>No</Button>
+          <Button onClick={() => handleDeleteConfirmation(true)} color="secondary">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
           <div style={{ textAlign: 'center', marginTop: '10px' }}>
             {currentSlide % 3 === 0 && currentSlide !== 0 ? (
               <Typography variant="h6">Continue for {currentSlide + 1}, {currentSlide + 2}, ...</Typography>
