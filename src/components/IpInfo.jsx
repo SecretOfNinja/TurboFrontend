@@ -9,11 +9,11 @@ const IpInfoDisplay = () => {
   const [ipInfo, setIpInfo] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
   const navigate = useNavigate();
-
+  const { shortCode } = useParams(); // Extract shortcode from URL parameters
   useEffect(() => {
     const fetchIpInfo = async () => {
       try {
-        const response = await axios.get('https://turbobackend.onrender.com/api/v1/turbo/ip/ipinfo');
+        const response = await axios.get(`https://turbobackend.onrender.com/api/v1/turbo/ip/ipinfo/${shortCode}`);
         setIpInfo(response.data);
 
         // Wait for 10 seconds before navigating to /turboform
@@ -26,7 +26,7 @@ const IpInfoDisplay = () => {
     };
 
     fetchIpInfo();
-  }, [navigate]);
+  }, [shortCode, navigate]);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
