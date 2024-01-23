@@ -22,7 +22,10 @@
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.21.3",
-    "styled-components": "^6.1.8"
+    "styled-components": "^6.1.8",
+    "typeface-bebas-neue": "^1.1.13",
+    "typeface-creepster": "^1.1.13",
+    "typeface-monoton": "^1.1.13"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

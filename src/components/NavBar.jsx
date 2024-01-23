@@ -1,29 +1,76 @@
 // NavBar.js
 import React from 'react';
-import { AppBar, Toolbar, Typography, Button, IconButton } from '@mui/material';
-import { Link } from 'react-router-dom'; // If using React Router
+import 'typeface-bebas-neue';
+import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Box } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
+import TurboLinkForm from './TurboLinkForm'; // Import TurboLinkForm component
+
+// Import the SVG image
+import TurboIcon from '../Image/turbo.svg';
 
 const NavBar = ({ handleSignOut }) => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu">
-          {/* You can add a menu icon here if needed */}
-        </IconButton>
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Your App Name
-        </Typography>
-        <Button color="inherit" component={Link} to="/">
-          Home
-        </Button>
-        <Button color="inherit" component={Link} to="/library">
-          Library
-        </Button>
-        <Button color="inherit" onClick={handleSignOut}>
-          Sign Out
-        </Button>
-      </Toolbar>
-    </AppBar>
+    <div>
+      <AppBar position="static" sx={{
+        background: '#C0C0C0',
+        boxShadow: '0 3px 5px 2px rgba(192, 192, 192, 0.5)',
+      }}>
+        <Toolbar sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '10px',
+        }}>
+          <div>
+            <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenuClick} sx={{
+              backgroundColor: '#D3D3D3',
+              borderRadius: '5px',
+            }}>
+              <MenuIcon />
+            </IconButton>
+          </div>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <img src={TurboIcon} alt="Icon" style={{ width: 30, height: 30, marginBottom: 4 }} />
+            <Typography variant="h6" component="div" sx={{
+              fontFamily: 'Bebas Neue, cursive',
+              fontSize: 28,
+              textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
+              color: '#696969',
+            }}>
+              Turbo SpyLink
+            </Typography>
+          </Box>
+          <div>
+            <Menu
+              anchorEl={anchorEl}
+              open={Boolean(anchorEl)}
+              onClose={handleMenuClose}
+              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+            >
+              <MenuItem component={Link} to="/" onClick={handleMenuClose}>
+                Home
+              </MenuItem>
+              <MenuItem component={Link} to="/library" onClick={handleMenuClose}>
+                Library
+              </MenuItem>
+              <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
+            </Menu>
+          </div>
+        </Toolbar>
+      </AppBar>
+    </div>
   );
 };
 
