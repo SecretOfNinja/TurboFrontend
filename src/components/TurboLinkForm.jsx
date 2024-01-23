@@ -11,11 +11,11 @@ import {
 import { StyledContainer, StyledBox, StyledGeneratedLinkBox, StyledDetailsBox } from './styles';
 import 'typeface-bebas-neue'; // Import Bebas Neue font
 
+
 function Turbo() {
   const [originalUrl, setOriginalUrl] = useState('');
   const [generatedLink, setGeneratedLink] = useState('');
   const [details, setDetails] = useState(null);
-  const [allDetails, setAllDetails] = useState([]);
   const [expandedShortCode, setExpandedShortCode] = useState(null);
 
   const handleMoreInfo = async (shortCode) => {
@@ -81,21 +81,6 @@ function Turbo() {
     }
   };
 
-  const fetchAllDetails = async () => {
-    try {
-      const response = await axios.get(
-        'https://turbobackend.onrender.com/api/v1/turbo/getAllDetails'
-      );
-      setAllDetails(response.data);
-    } catch (error) {
-      console.error('Error fetching all details:', error);
-    }
-  };
-
-  const handleFetchAllDetails = async () => {
-    await fetchAllDetails();
-  };
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (generatedLink) {
@@ -131,95 +116,51 @@ function Turbo() {
         Link Generator
       </Typography>
       <StyledBox>
-  <TextField
-    sx={{
-      width: '50%',
-      borderRadius: '10px',
-      border: '2px solid #000', // Set the border color to black
-    }}
-    id="originalUrl"
-    label="Original URL"
-    variant="outlined"
-    value={originalUrl}
-    onChange={(e) => setOriginalUrl(e.target.value)}
-  />
-</StyledBox>
-<Button
-  variant="contained"
-  sx={{
-    color: 'white',
-    background: 'linear-gradient(45deg, #000 30%, #444 90%)', // Set the linear gradient
-    borderRadius: 3,
-    border: 0,
-    height: 48,
-    marginTop: '20px', // Adjust the margin from the top
-    boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
-  }}
-  onClick={generateLink}
->
-  Generate Link
-</Button>
-{generatedLink && (
-  <StyledGeneratedLinkBox sx={{
-    background: 'linear-gradient(45deg, #000 30%, #444 90%)', // Set the same gradient as the button
-    borderRadius: '5px',
-    padding: '10px',
-    marginTop: '20px', // Adjust the margin from the top
-    width: '50%', // Adjust the width as needed
-  }}>
-    <Typography variant="h5" gutterBottom sx={{ color: 'white' }}>
-      Generated Link
-    </Typography>
-    <MUILink href="#" onClick={goToOriginalLink} sx={{ color: 'white' }}>
-      {generatedLink}
-    </MUILink>
-  </StyledGeneratedLinkBox>
-)}
-      <Button variant="contained" color="secondary" onClick={handleFetchAllDetails}>
-        Fetch All Details
+        <TextField
+          sx={{
+            width: '50%',
+            borderRadius: '10px',
+            border: '2px solid #000', // Set the border color to black
+          }}
+          id="originalUrl"
+          label="Original URL"
+          variant="outlined"
+          value={originalUrl}
+          onChange={(e) => setOriginalUrl(e.target.value)}
+        />
+      </StyledBox>
+      <Button
+        variant="contained"
+        sx={{
+          color: 'white',
+          background: 'linear-gradient(45deg, #000 30%, #444 90%)', // Set the linear gradient
+          borderRadius: 3,
+          border: 0,
+          height: 48,
+          marginTop: '20px', // Adjust the margin from the top
+          boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+        }}
+        onClick={generateLink}
+      >
+        Generate Link
       </Button>
-      {allDetails.length > 0 && (
-        <div>
-          <Typography variant="h5" gutterBottom>
-            All Details
+      {generatedLink && (
+        <StyledGeneratedLinkBox sx={{
+          background: 'linear-gradient(45deg, #000 30%, #444 90%)', // Set the same gradient as the button
+          borderRadius: '5px',
+          padding: '10px',
+          marginTop: '20px', // Adjust the margin from the top
+          width: '50%', // Adjust the width as needed
+        }}>
+          <Typography variant="h5" gutterBottom sx={{ color: 'white' }}>
+            Generated Link
           </Typography>
-          <ul>
-            {allDetails.map((detail, index) => (
-              <li key={`detail-${index}`}>
-                <Typography>
-                  Short Code: {detail.link}
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => handleMoreInfo(detail.link)}
-                  >
-                    More Info
-                  </Button>
-                </Typography>
-                <Collapse in={expandedShortCode === detail.link}>
-                  <div>
-                    <Typography>Original URL: {detail.originalUrl}</Typography>
-                    <Typography>Engagements: {detail.engagements}</Typography>
-                    <Typography>Earnings: ${detail.earnings.toFixed(2)}</Typography>
-                    <Typography>Created At: {detail.createdAt}</Typography>
-                    <Typography variant="h6" gutterBottom>
-                      Countries:
-                    </Typography>
-                    <ul>
-                      {detail.location.metrics.map((country, countryIndex) => (
-                        <li key={`${country.value}-${index}-${countryIndex}`}>
-                          {country.country} - Engagements: {country.engagements}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </Collapse>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <MUILink href="#" onClick={goToOriginalLink} sx={{ color: 'white' }}>
+            {generatedLink}
+          </MUILink>
+        </StyledGeneratedLinkBox>
       )}
-         {details && (
+      {details && (
         <StyledDetailsBox sx={{
           background: 'linear-gradient(45deg, #000 30%, #444 90%)',
           borderRadius: '15px',
@@ -229,26 +170,25 @@ function Turbo() {
           textAlign: 'left',
           margin: 'auto', // Center the StyledDetailsBox
         }}>
-    <Typography variant="h5" gutterBottom sx={{ color: 'white' }}>
-      Details
-    </Typography>
-    <Typography sx={{ color: 'white' }}>Engagements: {details.engagements}</Typography>
-    <Typography sx={{ color: 'white' }}>Earnings: ${details.earnings.toFixed(2)}</Typography>
-    <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
-      Countries:
-    </Typography>
-    <ul>
-      {details.location.metrics.map((country) => (
-        <li key={country.value}>
-          <span style={{ color: 'white' }}>
-            {country.country} - Engagements: {country.engagements}
-          </span>
-        </li>
-      ))}
-    </ul>
-  </StyledDetailsBox>
-)}
-
+          <Typography variant="h5" gutterBottom sx={{ color: 'white' }}>
+            Details
+          </Typography>
+          <Typography sx={{ color: 'white' }}>Engagements: {details.engagements}</Typography>
+          <Typography sx={{ color: 'white' }}>Earnings: ${details.earnings.toFixed(2)}</Typography>
+          <Typography variant="h6" gutterBottom sx={{ color: 'white' }}>
+            Countries:
+          </Typography>
+          <ul>
+            {details.location.metrics.map((country) => (
+              <li key={country.value}>
+                <span style={{ color: 'white' }}>
+                  {country.country} - Engagements: {country.engagements}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </StyledDetailsBox>
+      )}
     </StyledContainer>
   );
 }

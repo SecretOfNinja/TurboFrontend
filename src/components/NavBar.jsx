@@ -4,7 +4,6 @@ import 'typeface-bebas-neue';
 import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
-import TurboLinkForm from './TurboLinkForm'; // Import TurboLinkForm component
 
 // Import the SVG image
 import TurboIcon from '../Image/turbo.svg';
@@ -64,6 +63,10 @@ const NavBar = ({ handleSignOut }) => {
               </MenuItem>
               <MenuItem component={Link} to="/library" onClick={handleMenuClose}>
                 Library
+              </MenuItem>
+              {/* Add the new MenuItem for "Ip Info" */}
+              <MenuItem component={Link} to="/ip-info" onClick={handleMenuClose}>
+                Ip Info
               </MenuItem>
               <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
             </Menu>

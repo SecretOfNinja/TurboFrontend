@@ -22,6 +22,8 @@
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.21.3",
+    "react-slick": "^0.29.0",
+    "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.8",
     "typeface-bebas-neue": "^1.1.13",
     "typeface-creepster": "^1.1.13",
