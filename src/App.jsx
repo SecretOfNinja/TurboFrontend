@@ -20,7 +20,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<TurboLinkForm />} />
         <Route path="/library" element={<Library />} />
-        <Route path="/ip-info" element={<IpInfo />} />
+        <Route path="/ip-info/:shortcode" element={<IpInfo />} />
       </Routes>
       </div>
     </Router>
