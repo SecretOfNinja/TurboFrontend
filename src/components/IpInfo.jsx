@@ -20,7 +20,7 @@ const IpInfoDisplay = () => {
   useEffect(() => {
     const fetchIpInfo = async () => {
       try {
-        const response = await axios.get('https://turbobackend.onrender.com/api/v1/turbo/ip/ipinfo/AllDetails/getAllDetails');
+        const response = await axios.get('https://turbobackend.onrender.com/AllDetails/getAllDetails');
         setIpInfo(response.data);
       } catch (error) {
         console.error('Error fetching IP information:', error);
@@ -42,9 +42,9 @@ const IpInfoDisplay = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`https://turbobackend.onrender.com/api/v1/turbo/ip/ipinfo/${selectedInfo._id}`);
+      await axios.delete(`https://turbobackend.onrender.com/${selectedInfo._id}`);
       setOpenDeleteDialog(false);
-      const response = await axios.get('https://turbobackend.onrender.com/api/v1/turbo/ip/ipinfo/AllDetails/getAllDetails');
+      const response = await axios.get('https://turbobackend.onrender.com/AllDetails/getAllDetails');
       setIpInfo(response.data);
     } catch (error) {
       console.error('Error deleting IP information:', error);
