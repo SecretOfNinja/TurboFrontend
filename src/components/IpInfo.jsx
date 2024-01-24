@@ -1,18 +1,20 @@
+// Import React, useState, useEffect, axios, and other necessary libraries
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './IpInfoDisplay.css';
+import markerIconUrl from '../Image/location-2955.svg'; // Adjust the path
 
 const IpInfoDisplay = () => {
   const [ipInfo, setIpInfo] = useState([]);
   const [showDetails, setShowDetails] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
   const [selectedInfo, setSelectedInfo] = useState(null);
 
   useEffect(() => {
@@ -53,6 +55,13 @@ const IpInfoDisplay = () => {
     setOpenDeleteDialog(false);
   };
 
+  const customIcon = new L.Icon({
+    iconUrl: markerIconUrl,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32],
+  });
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -77,7 +86,8 @@ const IpInfoDisplay = () => {
               style={{ width: '100%', height: '200px' }}
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <Marker position={[info.lat, info.lon]}>
+
+              <Marker position={[info.lat, info.lon]} icon={customIcon}>
                 <Popup>{info.city}</Popup>
               </Marker>
             </MapContainer>
@@ -88,7 +98,8 @@ const IpInfoDisplay = () => {
                   {showDetails ? 'Less Info' : 'More Info'}
                 </Button>
                 <Button variant="contained" color="error" onClick={() => handleDeleteClick(info)}>
-                 Delete</Button>
+                  Delete
+                </Button>
               </p>
               {showDetails && (
                 <div className="details-container">
