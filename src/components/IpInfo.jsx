@@ -83,7 +83,7 @@ const IpInfoDisplay = () => {
             <MapContainer
               center={[info.lat, info.lon]}
               zoom={10}
-              style={{ width: '100%', height: '200px' }}
+              style={{ width: '100%', height: '265px' }}
             >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
