@@ -2,14 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import 'leaflet/dist/leaflet.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import './IpInfoDisplay.css'; // Create a CSS file for styling
+import './IpInfoDisplay.css';
 
 const IpInfoDisplay = () => {
   const [ipInfo, setIpInfo] = useState([]);
   const [showDetails, setShowDetails] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const [selectedInfo, setSelectedInfo] = useState(null);
 
   useEffect(() => {
     const fetchIpInfo = async () => {
@@ -24,8 +28,29 @@ const IpInfoDisplay = () => {
     fetchIpInfo();
   }, []);
 
-  const toggleDetails = () => {
+  const toggleDetails = (info) => {
+    setSelectedInfo(info);
     setShowDetails(!showDetails);
+  };
+
+  const handleDeleteClick = (info) => {
+    setSelectedInfo(info);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      await axios.delete(`https://turbobackend.onrender.com/api/v1/turbo/ip/ipinfo/${selectedInfo._id}`);
+      setOpenDeleteDialog(false);
+      const response = await axios.get('https://turbobackend.onrender.com/api/v1/turbo/ip/ipinfo/AllDetails/getAllDetails');
+      setIpInfo(response.data);
+    } catch (error) {
+      console.error('Error deleting IP information:', error);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setOpenDeleteDialog(false);
   };
 
   const sliderSettings = {
@@ -59,9 +84,11 @@ const IpInfoDisplay = () => {
             <div className="ip-info-details">
               <p>
                 Client IP: {info.query}{' '}
-                <button className="more-info-button" onClick={toggleDetails}>
-                  More Info
-                </button>
+                <Button variant="contained" color="primary" onClick={toggleDetails}>
+                  {showDetails ? 'Less Info' : 'More Info'}
+                </Button>
+                <Button variant="contained" color="error" onClick={() => handleDeleteClick(info)}>
+                 Delete</Button>
               </p>
               {showDetails && (
                 <div className="details-container">
@@ -79,6 +106,20 @@ const IpInfoDisplay = () => {
           </div>
         ))}
       </Slider>
+
+      {/* Delete confirmation dialog */}
+      <Dialog open={openDeleteDialog} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Confirmation</DialogTitle>
+        <DialogContent>
+          <p>Are you sure you want to delete this information?</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>No</Button>
+          <Button onClick={handleDeleteConfirm} variant="contained" color="error">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
