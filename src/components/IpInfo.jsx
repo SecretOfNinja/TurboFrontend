@@ -1,80 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Slider from 'react-slick';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import './IpInfoDisplay.css';
+import './IpInfoDisplay.css'; // Create a CSS file for styling
+
 const IpInfoDisplay = () => {
-  const [ipInfoList, setIpInfoList] = useState([]);
+  const [ipInfo, setIpInfo] = useState([]);
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
-    const fetchAllIpInfo = async () => {
+    const fetchIpInfo = async () => {
       try {
-        const response = await axios.get('https://turbobackend.onrender.com/api/v1/turbo/ip/ipinfo/getAllDetails');
-        setIpInfoList(response.data);
+        const response = await axios.get('https://turbobackend.onrender.com/api/v1/turbo/ip/ipinfo/AllDetails/getAllDetails');
+        setIpInfo(response.data);
       } catch (error) {
-        console.error('Error fetching all IP information:', error);
+        console.error('Error fetching IP information:', error);
       }
     };
 
-    fetchAllIpInfo();
+    fetchIpInfo();
   }, []);
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
   };
 
-  if (ipInfoList.length === 0) {
-    return <p>No IP information available.</p>;
-  }
-
-  const settings = {
-    dots: false,
+  const sliderSettings = {
+    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
   };
 
+  if (ipInfo.length === 0) {
+    return <p>No IP information available.</p>;
+  }
+
   return (
     <div className="ip-info-container">
-      <h2 className="ip-info-title">All IP Information</h2>
-      <Slider {...settings}>
-        {ipInfoList.map((ipInfo, index) => (
-          <div key={`ip-info-${index}`}>
-            {ipInfo.lat && ipInfo.lon ? ( // Check if lat and lon are available
-              <MapContainer
-                center={[ipInfo.lat, ipInfo.lon]}
-                zoom={10}
-                style={{ width: '100%', height: '200px' }}
-              >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <Marker position={[ipInfo.lat, ipInfo.lon]}>
-                  <Popup>{ipInfo.city}</Popup>
-                </Marker>
-              </MapContainer>
-            ) : (
-              <p>No location information available.</p>
-            )}
+      <h2 className="ip-info-title">IP Information</h2>
+      <Slider {...sliderSettings}>
+        {ipInfo.map((info) => (
+          <div key={info._id} className="ip-info-card">
+            <MapContainer
+              center={[info.lat, info.lon]}
+              zoom={10}
+              style={{ width: '100%', height: '200px' }}
+            >
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <Marker position={[info.lat, info.lon]}>
+                <Popup>{info.city}</Popup>
+              </Marker>
+            </MapContainer>
             <div className="ip-info-details">
               <p>
-                Client IP: {ipInfo.query}{' '}
+                Client IP: {info.query}{' '}
                 <button className="more-info-button" onClick={toggleDetails}>
                   More Info
                 </button>
               </p>
               {showDetails && (
                 <div className="details-container">
-                  <p>Country: {ipInfo.country}</p>
-                  <p>Device: {ipInfo.device}</p>
-                  <p>Country Code: {ipInfo.countryCode}</p>
-                  <p>Region: {ipInfo.region}</p>
-                  <p>Region Name: {ipInfo.regionName}</p>
-                  <p>City: {ipInfo.city}</p>
-                  <p>Timezone: {ipInfo.timezone}</p>
+                  <p>Country: {info.country}</p>
+                  <p>Device: {info.device}</p>
+                  <p>Country Code: {info.countryCode}</p>
+                  <p>Region: {info.region}</p>
+                  <p>Region Name: {info.regionName}</p>
+                  <p>City: {info.city}</p>
+                  <p>Timezone: {info.timezone}</p>
                   {/* Add more details as needed */}
                 </div>
               )}

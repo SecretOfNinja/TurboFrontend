@@ -59,11 +59,14 @@ function Library() {
 
   const handleDeleteConfirmation = async (confirmed) => {
     setDeleteConfirmationOpen(false);
-
+  
     if (confirmed && deletingShortcut) {
       try {
+        // Extract the unique identifier without the 'bit.ly/' prefix
+        const uniqueIdentifier = deletingShortcut.replace('bit.ly/', '');
+  
         await axios.delete(
-          `https://turbobackend.onrender.com/api/v1/turbo/getAllDetails/${deletingShortcut}`
+          `https://turbobackend.onrender.com/api/v1/turbo/${uniqueIdentifier}`
         );
         await fetchAllDetails();
       } catch (error) {
@@ -73,7 +76,6 @@ function Library() {
       }
     }
   };
-
 
   const fetchAllDetails = async () => {
     try {
