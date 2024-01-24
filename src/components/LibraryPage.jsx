@@ -119,8 +119,7 @@ function Library() {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    nextArrow: <NavigateNext />,
-    prevArrow: <NavigateBefore />,
+    arrows: false, // Set arrows to false to hide navigation arrows
   };
 
   const handleNext = () => {
@@ -136,9 +135,8 @@ function Library() {
   };
 
   return (
-    <div style={{ margin: '20px', padding: '20px' }}>
+    <div style={{ margin: '20px', padding: '20px' }}> {/* Increased margin and padding to prevent scroller */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-        {/* ... (unchanged part) */}
         <Typography variant="h5">
           All Details
           <IconButton
@@ -171,6 +169,13 @@ function Library() {
                           >
                             More Info
                           </Button>
+                          <Button
+                            variant="outlined"
+                            color="secondary"
+                            onClick={() => handleDeleteClick(detail.link)}
+                          >
+                            Delete
+                          </Button>
                         </Typography>
                       )
                     );
@@ -199,14 +204,6 @@ function Library() {
                       </li>
                     ))}
                   </ul>
-                  {/* Move the Delete button inside the Details modal */}
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => handleDeleteClick(selectedDetail.link)}
-                  >
-                    Delete
-                  </Button>
                 </StyledDetailsBox>
               )}
             </DialogContent>

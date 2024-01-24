@@ -1,22 +1,20 @@
-// NavBar.js
-import React from 'react';
+import React, { useState } from 'react';
 import 'typeface-bebas-neue';
-import { AppBar, Toolbar, Typography, IconButton, Menu, MenuItem, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 
-// Import the SVG image
 import TurboIcon from '../Image/turbo.svg';
 
 const NavBar = ({ handleSignOut }) => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true);
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
   };
 
   return (
@@ -32,12 +30,38 @@ const NavBar = ({ handleSignOut }) => {
           padding: '10px',
         }}>
           <div>
-            <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenuClick} sx={{
+            <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerOpen} sx={{
               backgroundColor: '#D3D3D3',
               borderRadius: '5px',
             }}>
               <MenuIcon />
             </IconButton>
+            <Drawer
+              anchor="left"
+              open={drawerOpen}
+              onClose={handleDrawerClose}
+              sx={{
+                '& .MuiDrawer-paper': {
+                  width: '200px',
+                  background: '#C0C0C0',
+                },
+              }}
+            >
+              <List>
+                <ListItem button component={Link} to="/" onClick={handleDrawerClose} sx={{ padding: '10px', transition: '0.3s' }}>
+                  <ListItemText primary="Home" />
+                </ListItem>
+                <ListItem button component={Link} to="/library" onClick={handleDrawerClose} sx={{ padding: '10px', transition: '0.3s' }}>
+                  <ListItemText primary="Library" />
+                </ListItem>
+                <ListItem button component={Link} to="/ip-info" onClick={handleDrawerClose} sx={{ padding: '10px', transition: '0.3s' }}>
+                  <ListItemText primary="Ip Info" />
+                </ListItem>
+                <ListItem button onClick={handleSignOut} sx={{ padding: '10px', transition: '0.3s' }}>
+                  <ListItemText primary="Sign Out" />
+                </ListItem>
+              </List>
+            </Drawer>
           </div>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             <img src={TurboIcon} alt="Icon" style={{ width: 30, height: 30, marginBottom: 4 }} />
@@ -50,27 +74,7 @@ const NavBar = ({ handleSignOut }) => {
               Turbo SpyLink
             </Typography>
           </Box>
-          <div>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleMenuClose}
-              anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-            >
-              <MenuItem component={Link} to="/" onClick={handleMenuClose}>
-                Home
-              </MenuItem>
-              <MenuItem component={Link} to="/library" onClick={handleMenuClose}>
-                Library
-              </MenuItem>
-              {/* Add the new MenuItem for "Ip Info" */}
-              <MenuItem component={Link} to="/ip-info" onClick={handleMenuClose}>
-                Ip Info
-              </MenuItem>
-              <MenuItem onClick={handleSignOut}>Sign Out</MenuItem>
-            </Menu>
-          </div>
+          <div></div>
         </Toolbar>
       </AppBar>
     </div>
