@@ -1,6 +1,6 @@
 // App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter  as Router, Route, Routes } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import TurboLinkForm from './components/TurboLinkForm'; // Import TurboLinkForm component
 import Library from './components/LibraryPage';
