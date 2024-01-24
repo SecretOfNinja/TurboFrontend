@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { IconButton,Button, Typography, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { IconButton, Button, Typography, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { Refresh, NavigateBefore, NavigateNext } from '@mui/icons-material';
 import Slider from 'react-slick';
 import styled from 'styled-components';
@@ -14,6 +14,7 @@ const StyledDetailsBox = styled.div`
   border: 1px solid #ddd;
   padding: 20px;
   margin-top: 20px;
+  margin-bottom: 30px; /* Increased margin to prevent white background issue */
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -59,12 +60,12 @@ function Library() {
 
   const handleDeleteConfirmation = async (confirmed) => {
     setDeleteConfirmationOpen(false);
-  
+
     if (confirmed && deletingShortcut) {
       try {
         // Extract the unique identifier without the 'bit.ly/' prefix
         const uniqueIdentifier = deletingShortcut.replace('bit.ly/', '');
-  
+
         await axios.delete(
           `https://turbobackend.onrender.com/api/v1/turbo/${uniqueIdentifier}`
         );
@@ -118,6 +119,8 @@ function Library() {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    nextArrow: <NavigateNext />,
+    prevArrow: <NavigateBefore />,
   };
 
   const handleNext = () => {
@@ -133,40 +136,46 @@ function Library() {
   };
 
   return (
-    <div>
-      <IconButton
-        color="secondary"
-        onClick={handleFetchAllDetails}
-        disabled={loading}
-      >
-        {loading ? <CircularProgress size={15} /> : <Refresh />}
-      </IconButton>
+    <div style={{ margin: '20px', padding: '20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+        {/* ... (unchanged part) */}
+        <Typography variant="h5">
+          All Details
+          <IconButton
+            color="secondary"
+            onClick={handleFetchAllDetails}
+            disabled={loading}
+            style={{ marginLeft: '10px' }}
+          >
+            {loading ? <CircularProgress size={15} /> : <Refresh />}
+          </IconButton>
+        </Typography>
+      </div>
       {allDetails.length > 0 && (
         <div>
-          <Typography variant="h5" gutterBottom>
-            All Details
-          </Typography>
           <Slider ref={sliderRef} {...settings}>
-          {allDetails.map((detail, index) => (
-              <div key={`detail-${index}`}>
-                <Typography>
-                  Short Code: {detail.link}
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => handleMoreInfo(detail.link)}
-                  >
-                    More Info
-                    
-                    </Button>
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={() => handleDeleteClick(detail.link)}
-              >
-                Delete
-              </Button>
-                </Typography>
+            {Array.from({ length: Math.ceil(allDetails.length / 3) }).map((_, rowIndex) => (
+              <div key={`row-${rowIndex}`}>
+                <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                  {Array.from({ length: 3 }).map((_, colIndex) => {
+                    const dataIndex = rowIndex * 3 + colIndex;
+                    const detail = allDetails[dataIndex];
+                    return (
+                      detail && (
+                        <Typography key={`detail-${dataIndex}`}>
+                          Short Code: {detail.link}
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => handleMoreInfo(detail.link)}
+                          >
+                            More Info
+                          </Button>
+                        </Typography>
+                      )
+                    );
+                  })}
+                </div>
               </div>
             ))}
           </Slider>
@@ -190,6 +199,14 @@ function Library() {
                       </li>
                     ))}
                   </ul>
+                  {/* Move the Delete button inside the Details modal */}
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => handleDeleteClick(selectedDetail.link)}
+                  >
+                    Delete
+                  </Button>
                 </StyledDetailsBox>
               )}
             </DialogContent>
@@ -198,22 +215,22 @@ function Library() {
             </DialogActions>
           </Dialog>
           <Dialog
-        open={deleteConfirmationOpen}
-        onClose={() => handleDeleteConfirmation(false)}
-      >
-        <DialogTitle>Confirmation</DialogTitle>
-        <DialogContent>
-          <Typography>
-            Are you sure you want to delete this details?
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => handleDeleteConfirmation(false)}>No</Button>
-          <Button onClick={() => handleDeleteConfirmation(true)} color="secondary">
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
+            open={deleteConfirmationOpen}
+            onClose={() => handleDeleteConfirmation(false)}
+          >
+            <DialogTitle>Confirmation</DialogTitle>
+            <DialogContent>
+              <Typography>
+                Are you sure you want to delete this details?
+              </Typography>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => handleDeleteConfirmation(false)}>No</Button>
+              <Button onClick={() => handleDeleteConfirmation(true)} color="secondary">
+                Yes
+              </Button>
+            </DialogActions>
+          </Dialog>
           <div style={{ textAlign: 'center', marginTop: '10px' }}>
             {currentSlide % 3 === 0 && currentSlide !== 0 ? (
               <Typography variant="h6">Continue for {currentSlide + 1}, {currentSlide + 2}, ...</Typography>
