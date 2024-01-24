@@ -42,7 +42,7 @@ const IpInfoDisplay = () => {
 
   const handleDeleteConfirm = async () => {
     try {
-      await axios.delete(`https://turbobackend.onrender.com/${selectedInfo._id}`);
+      await axios.delete(`https://turbobackend.onrender.com/ipinfo/${selectedInfo._id}`);
       setOpenDeleteDialog(false);
       const response = await axios.get('https://turbobackend.onrender.com/AllDetails/getAllDetails');
       setIpInfo(response.data);
