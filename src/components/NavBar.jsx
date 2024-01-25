@@ -1,12 +1,13 @@
+// NavBar.jsx
 import React, { useState } from 'react';
 import 'typeface-bebas-neue';
-import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Box } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Box, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link } from 'react-router-dom';
 
 import TurboIcon from '../Image/turbo.svg';
 
-const NavBar = ({ handleSignOut }) => {
+const NavBar = ({ handleSignOut, isLoggedIn }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const handleDrawerOpen = () => {
@@ -48,7 +49,7 @@ const NavBar = ({ handleSignOut }) => {
               }}
             >
               <List>
-                <ListItem button component={Link} to="/" onClick={handleDrawerClose} sx={{ padding: '10px', transition: '0.3s' }}>
+              <ListItem button component={Link} to="/" onClick={handleDrawerClose} sx={{ padding: '10px', transition: '0.3s' }}>
                   <ListItemText primary="Home" />
                 </ListItem>
                 <ListItem button component={Link} to="/library" onClick={handleDrawerClose} sx={{ padding: '10px', transition: '0.3s' }}>
@@ -57,9 +58,15 @@ const NavBar = ({ handleSignOut }) => {
                 <ListItem button component={Link} to="/ip-info" onClick={handleDrawerClose} sx={{ padding: '10px', transition: '0.3s' }}>
                   <ListItemText primary="Ip Info" />
                 </ListItem>
-                <ListItem button onClick={handleSignOut} sx={{ padding: '10px', transition: '0.3s' }}>
-                  <ListItemText primary="Sign Out" />
-                </ListItem>
+                {isLoggedIn ? (
+                  <ListItem button onClick={handleSignOut} sx={{ padding: '10px', transition: '0.3s' }}>
+                    <ListItemText primary="Sign Out" />
+                  </ListItem>
+                ) : (
+                  <ListItem button component={Link} to="/login" onClick={handleDrawerClose} sx={{ padding: '10px', transition: '0.3s' }}>
+                    <ListItemText primary="Login" />
+                  </ListItem>
+                )}
               </List>
             </Drawer>
           </div>

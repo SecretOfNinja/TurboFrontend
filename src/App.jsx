@@ -1,27 +1,33 @@
 // App.js
-import React from 'react';
-import { HashRouter  as Router, Route, Routes } from 'react-router-dom';
+import React, { useState } from 'react';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import NavBar from './components/NavBar';
-import TurboLinkForm from './components/TurboLinkForm'; // Import TurboLinkForm component
+import TurboLinkForm from './components/TurboLinkForm';
 import Library from './components/LibraryPage';
 import IpInfo from './components/IpInfo';
+import Login from './components/Login';
 import './App.css';
 
 const App = () => {
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
   const handleSignOut = () => {
-    // Implement your sign-out logic here
+    setLoggedIn(false);
     console.log('Signing out...');
   };
 
   return (
     <Router>
       <div className="app-container">
-      <NavBar handleSignOut={handleSignOut} />
-      <Routes>
-        <Route path="/" element={<TurboLinkForm />} />
-        <Route path="/library" element={<Library />} />
-        <Route path="/ip-info" element={<IpInfo />} />
-      </Routes>
+        <NavBar handleSignOut={handleSignOut} isLoggedIn={isLoggedIn} />
+        <Routes>
+          {!isLoggedIn && (
+            <Route path="/login" element={<Login onLogin={() => setLoggedIn(true)} />} />
+          )}
+          <Route path="/library" element={<Library />} />
+          <Route path="/ip-info" element={<IpInfo />} />
+          <Route path="/" element={<TurboLinkForm />} />
+        </Routes>
       </div>
     </Router>
   );
