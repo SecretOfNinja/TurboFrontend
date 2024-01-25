@@ -1,4 +1,4 @@
-// Import React, useState, useEffect, axios, and other necessary libraries
+// Turbo Info
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Slider from 'react-slick';
@@ -73,7 +73,6 @@ const IpInfoDisplay = () => {
   if (ipInfo.length === 0) {
     return <p>No IP information available.</p>;
   }
-
   return (
     <div className="ip-info-container">
       <h2 className="ip-info-title">IP Information</h2>
@@ -83,8 +82,7 @@ const IpInfoDisplay = () => {
             <MapContainer
               center={[info.lat, info.lon]}
               zoom={10}
-              style={{ width: '100%', height: '265px' }}
-            >
+              style={{ width: '100%', height: '266px' }}>
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
               <Marker position={[info.lat, info.lon]} icon={customIcon}>

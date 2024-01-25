@@ -8,7 +8,7 @@ import styled from 'styled-components';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-// Styled component for the details box
+// Styled component 
 const StyledDetailsBox = styled.div`
   background-color: #fff;
   border: 1px solid #ddd;
