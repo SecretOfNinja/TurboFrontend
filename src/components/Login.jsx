@@ -7,7 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { login } from './api'; // Import the login service function
-import './Login.css';
+import './login.css';
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
